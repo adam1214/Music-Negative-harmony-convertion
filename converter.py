@@ -1,10 +1,12 @@
 # https://docs.python.org/3.8/library/xml.etree.elementtree.html
 # https://kknews.cc/news/j4nlynq.html
 # https://github.com/schef/negative_harmony?fbclid=IwAR1Q-ym6Rkv5OCMpz-hKOSazD14fWXK1ief8VUSWguiNzGizWrlVlHgIx6A
+
 import xml.etree.cElementTree as ET
 from music21 import *
 
 def convert(step):
+    print(step.split())
     positiveChord = chord.Chord(step.split())
     print("positiveChord:", chord.Chord(positiveChord).pitchedCommonName)
 
@@ -22,9 +24,9 @@ def convert(step):
                 print("adding", note.pitch, "->", upperNotes[i])
                 negativeChord.append(upperNotes[i])
 
-    print("negativeChord:", chord.Chord(negativeChord).pitchedCommonName[:-7])
+    print("negativeChord:", chord.Chord(negativeChord).pitchedCommonName[:-7], str(negativeChord[0])[-1])
     print("=================================")
-    return chord.Chord(negativeChord).pitchedCommonName[:-7]
+    return chord.Chord(negativeChord).pitchedCommonName[:-7], str(negativeChord[0])[-1]
 
 if __name__ == "__main__":
     tree = ET.parse('一首簡單的歌_主旋律.musicxml')
@@ -35,15 +37,13 @@ if __name__ == "__main__":
     fifths = root.findall('.//fifths')
     fifths = int(fifths[0].text)
     print('fifths:', fifths) # -1表示降一號, 為F大調
-    chromaticScale = scale.ChromaticScale('F3').getPitches()
+    chromaticScale = scale.ChromaticScale('F4').getPitches()
     print(chromaticScale)
     print("========================================")
 
     upperNotes = [chromaticScale[10], chromaticScale[11], chromaticScale[0], chromaticScale[1], chromaticScale[2], chromaticScale[3]]
     lowerNotes = [chromaticScale[9], chromaticScale[8], chromaticScale[7], chromaticScale[6], chromaticScale[5], chromaticScale[4]]
 
-    # 把歌譜上所有的音都抓出來
-    all_notes = root.findall('.//note')
     '''
     note:代表一個音的標籤
         pitch:音高
@@ -69,20 +69,12 @@ if __name__ == "__main__":
     </note>
     '''
     '''
-    for note in all_notes:
-        print('###################', note)
-        for n in note:
-            print(n)
-    '''
-    convert("G3") # A#3
+    convert("G3") # A#3 or Bb3
     convert("F3") # C4
-    convert("D3") # D#4
-    exit()
+    convert("D3") # D#4 or Eb4
+    '''
     for pitch in root.findall('.//pitch'):
-        '''
-        tonic = convert(pitch.find('step').text)
-        
-        '''
+        octave = pitch.find('octave').text
         try:
             alter = pitch.find('alter').text
             if alter == '-1':
@@ -90,10 +82,8 @@ if __name__ == "__main__":
             else:
                 alter = '#'
             #print(pitch.find('step').text + alter)
-
-            tonic = convert(pitch.find('step').text + alter)
+            tonic, convert_octave = convert(pitch.find('step').text + alter + octave)
         except:
-            octave = pitch.find('octave').text
             pitch.remove(pitch.find('octave'))
             ET.SubElement(pitch, 'alter')
             ET.SubElement(pitch, 'octave')
@@ -101,12 +91,15 @@ if __name__ == "__main__":
             pitch.find('octave').text = octave
             #print(pitch.find('step').text)
 
-            tonic = convert(pitch.find('step').text)
+            tonic, convert_octave = convert(pitch.find('step').text + octave)
         pitch.find('step').text = tonic[0]
         if len(tonic) == 2:
             if tonic[1] == '#':
                 pitch.find('alter').text = '1'
             else:
                 pitch.find('alter').text = '-1'
+        else:
+            pitch.find('alter').text = '0'
+        pitch.find('octave').text = convert_octave
 
     tree.write('output.musicxml')
