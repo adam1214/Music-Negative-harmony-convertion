@@ -29,6 +29,10 @@ def convert(step):
     return chord.Chord(negativeChord).pitchedCommonName[:-7], str(negativeChord[0])[-1]
 
 if __name__ == "__main__":
+    octave_val_dict = { 'C3':1, 'C#3':2, 'Db3':2, 'D3':3, 'D#3':4, 'Eb3':4, 'E3':5, 'F3':6, 'F#3':7, 'Gb3':7, 'G3':8, 'G#3':9, 'Ab3':9, 'A3':10, 'A#3':11, 'Bb3':11, 'B3':12, \
+                    'C4':13, 'C#4':14, 'Db4':14, 'D4':15, 'D#4':16, 'Eb4':16, 'E4':17, 'F4':18, 'F#4':19, 'Gb4':19, 'G4':20, 'G#4':21, 'Ab4':21, 'A4':22, 'A#4':23, 'Bb4':23, 'B4':24, \
+                    'C5':25, 'C#5':26, 'Db5':26, 'D5':27, 'D#5':28, 'Eb5':28, 'E5':29, 'F5':30, 'F#5':31, 'Gb5':31, 'G5':32, 'G#5':33, 'Ab5':33, 'A5':34, 'A#5':35, 'Bb5':35, 'B5':36, \
+                    'C6':37  }
     tree = ET.parse('一首簡單的歌_主旋律.musicxml')
     root = tree.getroot() # 抓根節點元素，查看root的標籤內容
     print(root.tag, root.attrib)
@@ -43,7 +47,6 @@ if __name__ == "__main__":
 
     upperNotes = [chromaticScale[10], chromaticScale[11], chromaticScale[0], chromaticScale[1], chromaticScale[2], chromaticScale[3]]
     lowerNotes = [chromaticScale[9], chromaticScale[8], chromaticScale[7], chromaticScale[6], chromaticScale[5], chromaticScale[4]]
-
     '''
     note:代表一個音的標籤
         pitch:音高
@@ -73,6 +76,13 @@ if __name__ == "__main__":
     convert("F3") # C4
     convert("D3") # D#4 or Eb4
     '''
+    pre_octave_val_ori = -1
+    current_octabe_val_ori = -1
+    up_or_down_ori = -2 # 1 is up; 0 is equal; -1 is down
+
+    pre_octave_val_neg = -1
+    current_octabe_val_neg = -1
+    up_or_down_neg = -2 # 1 is up; 0 is equal; -1 is down
     for pitch in root.findall('.//pitch'):
         octave = pitch.find('octave').text
         try:
@@ -81,7 +91,19 @@ if __name__ == "__main__":
                 alter = 'b'
             else:
                 alter = '#'
-            #print(pitch.find('step').text + alter)
+
+            if pre_octave_val_ori == -1: # the first step
+                pre_octave_val_ori = octave_val_dict[pitch.find('step').text + alter + octave]
+            else:
+                current_octabe_val_ori = octave_val_dict[pitch.find('step').text + alter + octave]
+                if pre_octave_val_ori < current_octabe_val_ori:
+                    up_or_down_ori = 1
+                elif pre_octave_val_ori == current_octabe_val_ori:
+                    up_or_down_ori = 0
+                else:
+                    up_or_down_ori = -1
+                pre_octave_val_ori = current_octabe_val_ori
+
             tonic, convert_octave = convert(pitch.find('step').text + alter + octave)
         except:
             pitch.remove(pitch.find('octave'))
@@ -89,9 +111,46 @@ if __name__ == "__main__":
             ET.SubElement(pitch, 'octave')
             pitch.find('alter').text = '0'
             pitch.find('octave').text = octave
-            #print(pitch.find('step').text)
+
+            if pre_octave_val_ori == -1: # the first step
+                pre_octave_val_ori = octave_val_dict[pitch.find('step').text + octave]
+            else:
+                current_octabe_val_ori = octave_val_dict[pitch.find('step').text + octave]
+                if pre_octave_val_ori < current_octabe_val_ori:
+                    up_or_down_ori = 1
+                elif pre_octave_val_ori == current_octabe_val_ori:
+                    up_or_down_ori = 0
+                else:
+                    up_or_down_ori = -1
+                pre_octave_val_ori = current_octabe_val_ori
 
             tonic, convert_octave = convert(pitch.find('step').text + octave)
+
+        if pre_octave_val_neg == -1: # the first step
+            pre_octave_val_neg = octave_val_dict[tonic + convert_octave]
+        else:
+            current_octabe_val_neg = octave_val_dict[tonic + convert_octave]
+            if pre_octave_val_neg < current_octabe_val_neg:
+                up_or_down_neg = 1
+            elif pre_octave_val_neg == current_octabe_val_neg:
+                up_or_down_neg = 0
+            else:
+                up_or_down_neg = -1
+            pre_octave_val_neg = current_octabe_val_neg
+        
+        if up_or_down_neg == 1 and up_or_down_ori == 1:
+            convert_octave = str(int(convert_octave) - 1)
+            pre_octave_val_neg = octave_val_dict[tonic + convert_octave]
+        elif up_or_down_neg == -1 and up_or_down_ori == -1:
+            convert_octave = str(int(convert_octave) + 1)
+            pre_octave_val_neg = octave_val_dict[tonic + convert_octave]
+        elif up_or_down_neg == 1 and up_or_down_ori == 0:
+            convert_octave = str(int(convert_octave) - 1)
+            pre_octave_val_neg = octave_val_dict[tonic + convert_octave]
+        elif up_or_down_neg == -1 and up_or_down_ori == 0:
+            convert_octave = str(int(convert_octave) + 1)
+            pre_octave_val_neg = octave_val_dict[tonic + convert_octave]
+
         pitch.find('step').text = tonic[0]
         if len(tonic) == 2:
             if tonic[1] == '#':
