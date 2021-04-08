@@ -83,6 +83,7 @@ if __name__ == "__main__":
     pre_octave_val_neg = -1
     current_octabe_val_neg = -1
     up_or_down_neg = -2 # 1 is up; 0 is equal; -1 is down
+    pitch_index = 0
     for pitch in root.findall('.//pitch'):
         octave = pitch.find('octave').text
         try:
@@ -120,7 +121,7 @@ if __name__ == "__main__":
                     up_or_down_ori = 1
                 elif pre_octave_val_ori == current_octabe_val_ori:
                     up_or_down_ori = 0
-                else:
+                if pre_octave_val_ori > current_octabe_val_ori:
                     up_or_down_ori = -1
                 pre_octave_val_ori = current_octabe_val_ori
 
@@ -134,7 +135,7 @@ if __name__ == "__main__":
                 up_or_down_neg = 1
             elif pre_octave_val_neg == current_octabe_val_neg:
                 up_or_down_neg = 0
-            else:
+            elif pre_octave_val_neg > current_octabe_val_neg:
                 up_or_down_neg = -1
             pre_octave_val_neg = current_octabe_val_neg
         
@@ -150,7 +151,13 @@ if __name__ == "__main__":
         elif up_or_down_neg == -1 and up_or_down_ori == 0:
             convert_octave = str(int(convert_octave) + 1)
             pre_octave_val_neg = octave_val_dict[tonic + convert_octave]
-
+        elif up_or_down_neg == 0 and up_or_down_ori == 1:
+            convert_octave = str(int(convert_octave) - 1)
+            pre_octave_val_neg = octave_val_dict[tonic + convert_octave]
+        elif up_or_down_neg == 0 and up_or_down_ori == -1:
+            convert_octave = str(int(convert_octave) + 1)
+            pre_octave_val_neg = octave_val_dict[tonic + convert_octave]
+        
         pitch.find('step').text = tonic[0]
         if len(tonic) == 2:
             if tonic[1] == '#':
@@ -160,5 +167,14 @@ if __name__ == "__main__":
         else:
             pitch.find('alter').text = '0'
         pitch.find('octave').text = convert_octave
+
+
+        if pitch_index == 0 or pitch_index == 46:
+            pitch.find('octave').text = '5'
+            pre_octave_val_neg = octave_val_dict[tonic + '5']
+        elif pitch_index == 23 or pitch_index == 69 or pitch_index == 109:
+            pitch.find('octave').text = '4'
+            pre_octave_val_neg = octave_val_dict[tonic + '4']
+        pitch_index += 1
 
     tree.write('output.musicxml')

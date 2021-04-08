@@ -126,7 +126,7 @@
       <note default-x="177.69" default-y="-50.00" dynamics="88.89">
         <pitch>
           <step>F</step>
-          <alter>0</alter><octave>4</octave></pitch>
+          <alter>0</alter><octave>5</octave></pitch>
         <duration>2</duration>
         <voice>1</voice>
         <type>eighth</type>
@@ -136,7 +136,7 @@
       <note default-x="221.82" default-y="-45.00" dynamics="88.89">
         <pitch>
           <step>E</step>
-          <alter>-1</alter><octave>4</octave></pitch>
+          <alter>-1</alter><octave>5</octave></pitch>
         <duration>2</duration>
         <voice>1</voice>
         <type>eighth</type>
@@ -148,7 +148,7 @@
       <note default-x="10.00" default-y="-35.00" dynamics="88.89">
         <pitch>
           <step>C</step>
-          <alter>0</alter><octave>4</octave></pitch>
+          <alter>0</alter><octave>5</octave></pitch>
         <duration>4</duration>
         <voice>1</voice>
         <type>quarter</type>
@@ -157,7 +157,7 @@
       <note default-x="73.48" default-y="-35.00" dynamics="88.89">
         <pitch>
           <step>C</step>
-          <alter>0</alter><octave>4</octave></pitch>
+          <alter>0</alter><octave>5</octave></pitch>
         <duration>2</duration>
         <voice>1</voice>
         <type>eighth</type>
@@ -167,7 +167,7 @@
       <note default-x="113.15" default-y="-35.00" dynamics="88.89">
         <pitch>
           <step>C</step>
-          <alter>0</alter><octave>4</octave></pitch>
+          <alter>0</alter><octave>5</octave></pitch>
         <duration>2</duration>
         <voice>1</voice>
         <type>eighth</type>
@@ -177,7 +177,7 @@
       <note default-x="152.83" default-y="-30.00" dynamics="88.89">
         <pitch>
           <step>B</step>
-          <alter>-1</alter><octave>3</octave></pitch>
+          <alter>-1</alter><octave>4</octave></pitch>
         <duration>4</duration>
         <voice>1</voice>
         <type>quarter</type>
@@ -1345,7 +1345,7 @@
       <note default-x="70.24" default-y="-10.00" dynamics="88.89">
         <pitch>
           <step>E</step>
-          <alter>-1</alter><octave>5</octave></pitch>
+          <alter>-1</alter><octave>4</octave></pitch>
         <duration>2</duration>
         <voice>1</voice>
         <type>eighth</type>
@@ -1355,7 +1355,7 @@
       <note default-x="100.36" default-y="-15.00" dynamics="88.89">
         <pitch>
           <step>F</step>
-          <alter>0</alter><octave>5</octave></pitch>
+          <alter>0</alter><octave>4</octave></pitch>
         <duration>2</duration>
         <voice>1</voice>
         <type>eighth</type>
@@ -1371,7 +1371,7 @@
       <note default-x="160.60" default-y="-25.00" dynamics="88.89">
         <pitch>
           <step>A</step>
-          <alter>-1</alter><octave>5</octave></pitch>
+          <alter>-1</alter><octave>4</octave></pitch>
         <duration>2</duration>
         <voice>1</voice>
         <type>eighth</type>
@@ -1381,7 +1381,7 @@
       <note default-x="190.72" default-y="-30.00" dynamics="88.89">
         <pitch>
           <step>B</step>
-          <alter>-1</alter><octave>5</octave></pitch>
+          <alter>-1</alter><octave>4</octave></pitch>
         <duration>2</duration>
         <voice>1</voice>
         <type>eighth</type>
@@ -1391,7 +1391,7 @@
       <note default-x="220.83" default-y="-35.00" dynamics="88.89">
         <pitch>
           <step>C</step>
-          <alter>0</alter><octave>6</octave></pitch>
+          <alter>0</alter><octave>5</octave></pitch>
         <duration>2</duration>
         <voice>1</voice>
         <type>eighth</type>
